@@ -1,27 +1,18 @@
 import React from "react";
-import useCart from "../../store/cartStore";
-import useCheckout from "../../store/checkoutStore";
 import client from "../../lib/commerce";
 import Header from "../../components/Header";
+import useStore from "../../store/commerceStore";
 
 const ProductPage = ({ product }) => {
-	const setCart = useCart((state) => state.setCart);
+	const addToCart = useStore((state) => state.addToCart);
 
-	const addToCart = async () => {
-		try {
-			const cart = await client.cart.add(product.id, 1);
-
-			setCart(cart);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	const handleAdd = () => addToCart(product.id, 1);
 
 	return (
 		<div>
 			<Header />
 			<h1>{product.name}</h1>
-			<button onClick={addToCart}>Add</button>
+			<button onClick={handleAdd}>Add</button>
 		</div>
 	);
 };

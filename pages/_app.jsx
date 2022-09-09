@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import { useEffect } from "react";
-import useCart from "../store/cartStore";
+import useStore from "../store/commerceStore";
 import client from "../lib/commerce";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -19,18 +19,12 @@ const toastOptions = {
 };
 
 function MyApp({ Component, pageProps }) {
-	const setCart = useCart((state) => state.setCart);
-	const cart = useCart((state) => state.cart);
-
-	useEffect(() => {
-		if (!cart.id || cart.expires <= Math.floor(Date.now() / 1000)) {
-			console.log("Fetching new cart");
-			getCart();
-		}
-	}, []);
+	const cart = useStore((state) => state.cart);
+	const setCart = useStore((state) => state.setCart);
+	const setProducts = useStore((state) => state.setProducts);
 
 	// Retrieve cart from Commerce.js API
-	const getCart = async () => {
+	const fetchCart = async () => {
 		try {
 			const cart = await client.cart.retrieve();
 			// set Commerce cart to app state
@@ -40,9 +34,18 @@ function MyApp({ Component, pageProps }) {
 		}
 	};
 
-	// if (!hasHydrated) {
-	// 	return <p>Loading...</p>;
-	// }
+	const fetchProducts = async () => {
+		try {
+			const { data } = await client.products.list();
+			setProducts(data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchCart();
+	}, []);
 
 	return (
 		<Elements stripe={stripePromise}>

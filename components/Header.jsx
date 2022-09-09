@@ -1,15 +1,17 @@
 import React from "react";
 import Link from "next/link";
 import CartSummary from "./CartSummary";
+import cc from "classcat";
 
-const Header = () => {
+const Header = ({ className }) => {
+	const style = cc(["", className]);
+
 	return (
-		<header className="">
-			<div className="py-3 lg:py-5 flex items-center">
+		<header className={style}>
+			<div className="py-3 lg:py-5 flex items-center justify-between">
 				<Link href="/">
 					<a>Shop</a>
 				</Link>
-				<span className="pr-1">,</span>
 				<CartSummary />
 			</div>
 		</header>

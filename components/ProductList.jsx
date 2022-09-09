@@ -1,22 +1,19 @@
 import React from "react";
 import Link from "next/link";
-import Product from "./Product";
 
 const ProductList = ({ products }) => {
-	if (!products) return null;
-	return (
-		<ul>
-			{products.map((product) => (
-				<li key={product.permalink}>
-					<Link href={`/products/${product.permalink}`}>
-						<a>
-							<Product {...product} />
-						</a>
-					</Link>
-				</li>
-			))}
-		</ul>
-	);
+	if (!products || products.length === 0) return null;
+
+	return products.map(({ name, permalink }, index) => (
+		<span key={permalink}>
+			{index ? ", " : ""}
+			<Link href={`/products/${permalink}`}>
+				<a className="text-lg md:text-xl lg:text-2xl hover:italic">
+					{name}
+				</a>
+			</Link>
+		</span>
+	));
 };
 
 export default ProductList;
